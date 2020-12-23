@@ -15,13 +15,13 @@
       }
     }
   },
-  "tags": [{ "name": "Tools", "description": "Tools routes" }],
+  "tags": [{ "name": "Users", "description": "Users routes" }],
   "paths": {
-    "/tools/:id": {
+    "/users/:id": {
       "delete": {
         "parameters": [{ "$ref": "#/components/parameters/id" }],
-        "tags": ["Tools"],
-        "description": "Delete Tool by id",
+        "tags": ["Users"],
+        "description": "Delete User by id",
         "responses": {
           "204": {
             "description": "No Content"
@@ -39,7 +39,7 @@
         }
       },
       "put": {
-        "description": "Update tool by id",
+        "description": "Update user by id",
         "parameters": [
           { "$ref": "#/components/parameters/id" },
           {
@@ -85,7 +85,7 @@
         }
       }
     },
-    "/tools/": {
+    "/users/": {
       "get": {
         "description": "",
         "parameters": [],
@@ -96,7 +96,7 @@
         }
       },
       "post": {
-        "description": "Create new Tool in the Database",
+        "description": "Create new User in the Database",
         "parameters": [
           {
             "name": "body",
