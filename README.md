@@ -29,11 +29,15 @@ A template repository was made with this decisions so it was easier to replicate
 
 Use `./startdevelopent.sh` to run the project on the local server
 
-After that you cant use **docker-compose** whenever you want:
-
-`$ docker-compose up --build`
-
 If you want to close to close the container use `Ctrl + C`
+
+### Dependencies
+
+If you want to add o remove any dependencia follow these steps:
+
+- `$ docker-compose down` in `./`
+- Install dependencies inside `./client` or `./backend`
+- Use `./startdevelopent.sh` to start developing again
 
 ## Building The Projects
 
