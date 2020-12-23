@@ -1,25 +1,25 @@
 import { Request, Response } from "express";
-import Tool, { tools } from "../model/Tool";
+import User, { users } from "../model/User";
 
-class ToolController {
+class UserController {
   async create(request: Request, response: Response): Promise<Response<any>> {
     try {
-      const tool: tools = request.body;
-      const [findToolByTitle, findToolByLink] = await Promise.all([
-        Tool.find().where({ title: tool.title }),
-        Tool.find().where({ link: tool.link }),
+      const user: users = request.body;
+      const [findUserByTitle, findUserByEmail] = await Promise.all([
+        User.find().where({ name: user.name }),
+        User.find().where({ email: user.email }),
       ]);
-      if (findToolByTitle[0] || findToolByLink[0]) {
+      if (findUserByTitle[0] || findUserByEmail[0]) {
         return response.status(409).json({
-          error: `Tool with ${
-            findToolByTitle[0] ? "title " + tool.title : "link " + tool.link
+          error: `User with ${
+            findUserByTitle[0] ? "name " + user.email : "email " + user.email
           } already registered`,
         });
       }
-      const newTool = new Tool(tool);
-      const newToolID = (await newTool.save()).id;
+      const newUser = new User(user);
+      const newUserID = (await newUser.save()).id;
 
-      return response.status(201).json(newTool);
+      return response.status(201).json({ id: newUserID, user: newUser });
     } catch (error) {
       return response.status(400).json({ error });
     }
@@ -29,7 +29,7 @@ class ToolController {
     const { id } = request.params;
     console.log(request.params);
     try {
-      await Tool.deleteOne({ _id: id });
+      await User.deleteOne({ _id: id });
       return response.status(204).send();
     } catch (error) {
       return response.status(400).json({ error });
@@ -48,12 +48,12 @@ class ToolController {
       if (request.query?.tags) {
         if (Number(request.query?.tags?.length) > 1) {
           const tags: any = request.query.tags || [""];
-          const tools = await Tool.find().where("tags").all(tags);
-          return response.status(200).json(tools);
+          const users = await User.find().where("tags").all(tags);
+          return response.status(200).json(users);
         }
       }
-      const tools = await Tool.find().where(request.query);
-      return response.status(200).json(tools);
+      const users = await User.find().where(request.query);
+      return response.status(200).json(users);
     } catch (error) {
       return response.status(400).json({
         error: error,
@@ -68,8 +68,9 @@ class ToolController {
     const body = request.body;
 
     try {
-      await Tool.updateOne({ _id: id }, { ...body });
-      return response.status(204);
+      await User.updateOne({ _id: id }, { ...body });
+      console.log("Working!");
+      return response.status(204).send();
     } catch (err) {
       console.log(err);
       return response.status(400).json({ err });
@@ -77,4 +78,4 @@ class ToolController {
   }
 }
 
-export default new ToolController();
+export default new UserController();

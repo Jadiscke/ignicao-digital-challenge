@@ -1,15 +1,14 @@
-import Tool, { tools } from "../model/Tool";
+import User, { users } from "../model/User";
 import { Document } from "mongoose";
 import dotenv from "dotenv";
 import db from "../database";
 
-const seed = async (tool: tools): Promise<void> => {
-  const toolDocument: Document = new Tool(tool);
+const seed = async (user: users): Promise<void> => {
+  const userDocument: Document = new User(user);
   try {
-    const savedTool = await Tool.findOne({ title: tool.title }).exec();
-    // console.log("savedTool:   ", savedTool);
-    if (!savedTool) {
-      await toolDocument.save();
+    const savedUser = await User.findOne({ name: user.name }).exec();
+    if (!savedUser) {
+      await userDocument.save();
     }
   } catch (error) {
     console.log(error);
@@ -17,41 +16,23 @@ const seed = async (tool: tools): Promise<void> => {
 };
 
 const init = async (): Promise<void> => {
-  const baseTools: Array<tools> = [
+  const baseUsers: Array<users> = [
     {
-      // ou qualquer outro identificador
-      title: "Notion",
-      link: "https://notion.so",
-      description:
-        "All in one tool to organize teams and ideas. Write, plan, collaborate, and get organized. ",
-      tags: [
-        "organization",
-        "planning",
-        "collaboration",
-        "writing",
-        "calendar",
-      ],
+      name: "Ana Souza",
+      email: "ana@example.com",
+      tags: ["aluno", "destaque", "marketing"],
     },
     {
-      title: "json-server",
-      link: "https://github.com/typicode/json-server",
-      description:
-        "Fake REST API based on a json schema. Useful for mocking and creating APIs for front-end devs to consume in coding challenges.",
-      tags: ["api", "json", "schema", "node", "github", "rest"],
-    },
-    {
-      title: "fastify",
-      link: "https://www.fastify.io/",
-      description:
-        "Extremely fast and simple, low-overhead web framework for NodeJS. Supports HTTP2.",
-      tags: ["web", "framework", "node", "http2", "https", "localhost"],
+      name: "Marcus Silva",
+      email: "marcus.silva@email.com",
+      tags: ["aluno", "gestão", "empreendedorismo"],
     },
   ];
   dotenv.config();
   try {
     await db.start();
-    for (const tool of baseTools) {
-      await seed(tool);
+    for (const user of baseUsers) {
+      await seed(user);
     }
   } catch (error) {
     console.log(error);
