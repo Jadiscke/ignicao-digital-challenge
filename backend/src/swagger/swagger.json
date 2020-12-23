@@ -1,0 +1,148 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "vuttr backend",
+    "version": "1.0"
+  },
+  "servers": [{ "url": "https://localhost:8000/" }],
+  "components": {
+    "parameters": {
+      "id": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "id"
+      }
+    }
+  },
+  "tags": [{ "name": "Tools", "description": "Tools routes" }],
+  "paths": {
+    "/tools/:id": {
+      "delete": {
+        "parameters": [{ "$ref": "#/components/parameters/id" }],
+        "tags": ["Tools"],
+        "description": "Delete Tool by id",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "json": {
+                "example": {
+                  "error": "Error description"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "description": "Update tool by id",
+        "parameters": [
+          { "$ref": "#/components/parameters/id" },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "title": "Body",
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "link": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "json": {
+                "example": {
+                  "error": "Error description"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tools/": {
+      "get": {
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "description": "Create new Tool in the Database",
+        "parameters": [
+          {
+            "name": "body",
+            "required": true,
+            "allowEmptyValue": false,
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "title": "Body",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "link": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": ["title", "link", "description", "tags"]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "json": {
+                "example": {
+                  "error": "Error description"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

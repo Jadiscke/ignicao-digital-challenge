@@ -1,0 +1,9 @@
+.git
+.gitignore
+.github/*
+node_modules/
+node_modules/*
+yarn.lock
+package-lock.json
+Dockerfile*
+.dockerignore

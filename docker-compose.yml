@@ -1,0 +1,41 @@
+version: "3.8"
+services:
+  backend:
+    stdin_open: true
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    links:
+      - mongo
+    depends_on:
+      - mongo
+    environment:
+      PORT: 8000
+      MONGO_DB_URL: mongodb://mongo:27017/
+    ports:
+      - "8000:8000"
+    command: yarn dev
+    volumes:
+      - /usr/src/app/node_modules/
+      - ./backend:/usr/src/app/
+
+  mongo:
+    image: mongo:4.2.9-bionic
+    ports:
+      - "27017:27017"
+  client:
+    stdin_open: true
+    build:
+      context: ./client
+      dockerfile: Dockerfile.dev
+    environment:
+      BACKEND_URL: backend://backend:8000
+      PORT: 3000
+    ports:
+      - "3000:3000"
+    command: "yarn start"
+    volumes:
+      - /usr/src/app/node_modules/
+      - ./client:/usr/src/app/
+    links:
+      - backend
