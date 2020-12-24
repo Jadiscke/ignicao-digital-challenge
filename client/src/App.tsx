@@ -1,20 +1,21 @@
 import { ThemeProvider } from "@material-ui/core";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Body from "./components/Body";
 import Layout from "./components/Layout";
 import UsersTable from "./components/UsersTable";
+import { getUsers } from "./services/users";
 import theme from "./Theme";
 
-const rows = [
-  {
-    id: "1",
-    name: "vinicius",
-    email: "vjtasso@gmail.com",
-    tags: ["empreendedor", "aluno"],
-  },
-];
+const App = () => {
+  const [rows, setRows] = useState([
+    { _id: "", name: "", email: "", tags: [""] },
+  ]);
 
-function App() {
+  useEffect(() => {
+    getUsers().then((users) => {
+      setRows(users);
+    });
+  }, []);
   return (
     <ThemeProvider theme={theme}>
       <Layout>
@@ -24,6 +25,6 @@ function App() {
       </Layout>
     </ThemeProvider>
   );
-}
+};
 
 export default App;

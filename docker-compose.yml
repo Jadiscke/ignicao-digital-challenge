@@ -28,14 +28,15 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile.dev
+    depends_on:
+      - backend
+    links:
+      - backend
     environment:
-      BACKEND_URL: backend://backend:8000
-      PORT: 3000
+      - "REACT_APP_API_URL=http://localhost:8000"
     ports:
       - "3000:3000"
     command: "yarn start"
     volumes:
       - /usr/src/app/node_modules/
       - ./client:/usr/src/app/
-    links:
-      - backend
