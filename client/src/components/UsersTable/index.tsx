@@ -1,16 +1,13 @@
 import React from "react";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   Box,
   Grid,
   makeStyles,
+  Card,
+  Typography,
+  CardContent,
+  Divider,
 } from "@material-ui/core";
-import theme from "../../Theme";
 import { orange } from "@material-ui/core/colors";
 
 interface Row {
@@ -27,30 +24,48 @@ interface TagProps {
   tag: string;
   index: number;
 }
+
+const useTagStyles = makeStyles((theme) => ({
+  tagBox: {
+    display: "inline-block",
+    boxSizing: "border-box",
+    maxWidth: "100px",
+  },
+}));
 const Tag = ({ tag, index }: TagProps) => {
+  const classes = useTagStyles();
   return (
-    <Box
-      component="span"
-      margin="1em 0.3em"
-      border="#fff solid"
-      padding="0.3em"
-      bgcolor={orange[300]}
-      color="#333"
-      key={index}
-    >
-      {tag}
-    </Box>
+    <Grid item xs={12} md={6} lg={4}>
+      <Box
+        border="solid 1px"
+        borderColor={orange[300]}
+        bgcolor={orange[100]}
+        component="div"
+        display="inline-block"
+        padding="0.3em"
+      >
+        <Typography color="secondary">{tag}</Typography>
+      </Box>
+    </Grid>
   );
 };
 
 const useStyles = makeStyles((theme) => ({
-  userStyle: {
-    border: `solid 1px ${theme.palette.text.primary}`,
-    margin: "0.3em",
+  root: {
+    flexGrow: 1,
   },
   tableContainer: {
     width: "90%",
     margin: "0 auto",
+    flexGrow: 1,
+  },
+  userCard: {
+    boxSizing: "border-box",
+    padding: "0.5em",
+    width: "100%",
+  },
+  divider: {
+    margin: "0.5em 0",
   },
 }));
 
@@ -59,9 +74,10 @@ const UsersTable = ({ rows }: UserTableProps) => {
   return (
     <Grid
       container
-      spacing={10}
-      direction="column"
-      justify="center"
+      spacing={4}
+      direction="row"
+      justify="space-between"
+      wrap="wrap"
       alignItems="center"
       className={classes.tableContainer}
     >
@@ -71,23 +87,35 @@ const UsersTable = ({ rows }: UserTableProps) => {
           container
           item
           xs={12}
+          sm={6}
           direction="row"
           justify="center"
           alignItems="center"
           spacing={2}
-          className={classes.userStyle}
+          wrap="wrap"
+          className={classes.root}
         >
-          <Grid item xs={12} sm={6} md={4}>
-            {row.name}
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            {row.email}
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            {row.tags.map((tag, index) => (
-              <Tag tag={tag} index={index} />
-            ))}
-          </Grid>
+          <Card elevation={10} className={classes.userCard}>
+            <CardContent>
+              <Typography color="textSecondary" variant="h6">
+                {row.name}
+              </Typography>
+              <Typography color="textSecondary">{row.email}</Typography>
+              <Divider variant="fullWidth" className={classes.divider} />
+              <Grid
+                container
+                direction="row"
+                item
+                spacing={1}
+                alignItems="center"
+                justify="space-between"
+              >
+                {row.tags.map((tag, index) => (
+                  <Tag tag={tag} index={index} />
+                ))}
+              </Grid>
+            </CardContent>
+          </Card>
         </Grid>
       ))}
     </Grid>

@@ -13,7 +13,6 @@ const useStyles = makeStyles((theme) => ({
     margin: "1em auto",
     width: "90%",
     boxShadow: "0 0.3em 0.5em 0.01em grey",
-    height: "70vh",
     backgroundColor: orange[700],
   },
   bodyTitle: {
