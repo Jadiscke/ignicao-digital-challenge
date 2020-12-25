@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   tableContainer: {
-    width: "90%",
+    width: "100%",
     margin: "0 auto",
     flexGrow: 1,
   },
@@ -78,7 +78,7 @@ const UsersTable = ({ rows }: UserTableProps) => {
       direction="row"
       justify="space-between"
       wrap="wrap"
-      alignItems="center"
+      alignItems="stretch"
       className={classes.tableContainer}
     >
       {rows.map((row) => (
@@ -88,6 +88,8 @@ const UsersTable = ({ rows }: UserTableProps) => {
           item
           xs={12}
           sm={6}
+          lg={5}
+          xl={4}
           direction="row"
           justify="center"
           alignItems="center"

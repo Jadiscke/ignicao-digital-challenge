@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
     boxSizing: "border-box",
     padding: theme.spacing(2),
     margin: "1em auto",
-    width: "90%",
+    width: "95%",
     boxShadow: "0 0.3em 0.5em 0.01em grey",
     backgroundColor: orange[700],
   },
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
 const Body = ({ children, title }: BodyProps) => {
   const classes = useStyles();
   return (
-    <Container maxWidth="lg" className={classes.wrapper}>
+    <Container maxWidth="xl" className={classes.wrapper}>
       <Typography
         variant="h4"
         component="h2"
