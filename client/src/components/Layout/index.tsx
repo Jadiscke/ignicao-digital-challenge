@@ -1,13 +1,5 @@
 import React, { ReactNode } from "react";
-import {
-  AppBar,
-  Box,
-  Button,
-  Icon,
-  IconButton,
-  Toolbar,
-  Typography,
-} from "@material-ui/core";
+import { AppBar, Box, Button, Toolbar, Typography } from "@material-ui/core";
 
 import { makeStyles } from "@material-ui/core/styles";
 import MainMenu from "../MainMenu";

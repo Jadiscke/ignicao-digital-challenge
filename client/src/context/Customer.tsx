@@ -1,4 +1,4 @@
-import React, { createContext, ReactNode, useContext, useState } from "react";
+import React, { createContext, useState } from "react";
 import { getUsers } from "../services/users";
 interface Customer {
   _id: string;

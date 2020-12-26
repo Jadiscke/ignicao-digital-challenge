@@ -1,5 +1,5 @@
 import { ThemeProvider } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Body from "./components/Body";
 import Layout from "./components/Layout";
 import UsersTable from "./components/UsersTable";

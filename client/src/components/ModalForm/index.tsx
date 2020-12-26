@@ -8,7 +8,6 @@ import {
   Button,
 } from "@material-ui/core";
 import { createUser } from "../../services/users";
-import { useContainerProps } from "@material-ui/data-grid";
 import CustomerContext from "../../context/Customer";
 import ModalContext from "../../context/Modal";
 const tagsValues = [

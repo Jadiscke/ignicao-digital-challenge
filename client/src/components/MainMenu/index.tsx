@@ -1,16 +1,9 @@
-import React, {
-  ChangeEvent,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useContext, useState } from "react";
 import Button from "@material-ui/core/Button";
 import { Icon, Typography, Menu, MenuItem, Modal } from "@material-ui/core";
 
 import ModalForm from "../ModalForm";
-import ModalContext, { ModalProvider } from "../../context/Modal";
+import ModalContext from "../../context/Modal";
 
 interface Props {
   menuIcon: string;
