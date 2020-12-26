@@ -3,7 +3,7 @@ import db from "../database";
 interface users {
   name: string;
   email: string;
-  tags: Array<String>;
+  tags: Array<string>;
 }
 const usersSchema = new Schema({
   name: String,
