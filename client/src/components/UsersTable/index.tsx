@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import {
   Grid,
   makeStyles,
@@ -9,16 +9,7 @@ import {
 } from "@material-ui/core";
 
 import Tag from "../Tag";
-
-interface Row {
-  _id: string;
-  name: string;
-  email: string;
-  tags: Array<string>;
-}
-interface UserTableProps {
-  rows: Array<Row>;
-}
+import CustomerContext from "../../context/Customer";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -39,8 +30,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const UsersTable = ({ rows }: UserTableProps) => {
+const UsersTable = () => {
+  const { customers, load } = useContext(CustomerContext);
   const classes = useStyles();
+  useEffect(() => {
+    load();
+  }, []);
   return (
     <Grid
       container
@@ -51,7 +46,7 @@ const UsersTable = ({ rows }: UserTableProps) => {
       alignItems="stretch"
       className={classes.tableContainer}
     >
-      {rows.map((row) => (
+      {customers.map((row) => (
         <Grid
           key={row._id}
           container
@@ -83,7 +78,7 @@ const UsersTable = ({ rows }: UserTableProps) => {
                 justify="space-between"
               >
                 {row.tags.map((tag, index) => (
-                  <Tag tag={tag} index={index} />
+                  <Tag tag={tag} index={index} key={index} />
                 ))}
               </Grid>
             </CardContent>

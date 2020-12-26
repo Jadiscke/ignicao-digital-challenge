@@ -6,17 +6,16 @@ interface User {
   tags: Array<string>;
 }
 const getUsers = async () => {
-  try {
-    const response = await axios.get(`${process.env.REACT_APP_API_URL}/users`);
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
+  const response = await axios.get(`${process.env.REACT_APP_API_URL}/users`);
+  return response.data;
 };
 
 const createUser = async ({ name, email, tags }: User) => {
   try {
-    const response = await axios.post(`${process.env.REACT_APP_API_URL}/users`);
+    const response = await axios.post(
+      `${process.env.REACT_APP_API_URL}/users`,
+      { name, email, tags }
+    );
     return response.data;
   } catch (error) {
     const response = error;
@@ -24,4 +23,4 @@ const createUser = async ({ name, email, tags }: User) => {
   }
 };
 
-export { getUsers };
+export { getUsers, createUser };

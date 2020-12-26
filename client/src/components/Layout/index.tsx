@@ -11,6 +11,7 @@ import {
 
 import { makeStyles } from "@material-ui/core/styles";
 import MainMenu from "../MainMenu";
+import { ModalProvider } from "../../context/Modal";
 
 interface LayoutProps {
   children: ReactNode;
@@ -34,7 +35,10 @@ const Layout = ({ children }: LayoutProps) => {
     <Box className={classes.root}>
       <AppBar position="static" color="primary">
         <Toolbar>
-          <MainMenu menuIcon="menu" />
+          <ModalProvider>
+            <MainMenu menuIcon="menu" />
+          </ModalProvider>
+
           <Typography
             variant="h6"
             color="textPrimary"
