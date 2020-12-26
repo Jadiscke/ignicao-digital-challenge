@@ -7,10 +7,10 @@ const theme = createMuiTheme({
       main: orange[700],
     },
     secondary: {
-      main: "#333333",
+      main: "#fff",
     },
     text: {
-      primary: "#ffffff",
+      primary: "#333",
       secondary: orange[300],
     },
   },

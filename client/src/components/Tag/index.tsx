@@ -17,7 +17,7 @@ const useTagStyles = makeStyles((theme) => ({
 const Tag = ({ tag, index }: TagProps) => {
   const classes = useTagStyles();
   return (
-    <Grid item xs={12} md={6} lg={4}>
+    <Grid item xs={12} md={6} lg={4} key={`${tag}-${index}`}>
       <Box
         border="solid 1px"
         borderColor={orange[300]}
@@ -26,7 +26,7 @@ const Tag = ({ tag, index }: TagProps) => {
         display="inline-block"
         padding="0.3em"
       >
-        <Typography color="secondary">{tag}</Typography>
+        <Typography>{tag}</Typography>
       </Box>
     </Grid>
   );

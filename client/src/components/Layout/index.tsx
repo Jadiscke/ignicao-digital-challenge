@@ -10,6 +10,7 @@ import {
 } from "@material-ui/core";
 
 import { makeStyles } from "@material-ui/core/styles";
+import MainMenu from "../MainMenu";
 
 interface LayoutProps {
   children: ReactNode;
@@ -33,9 +34,7 @@ const Layout = ({ children }: LayoutProps) => {
     <Box className={classes.root}>
       <AppBar position="static" color="primary">
         <Toolbar>
-          <IconButton edge="start" className={classes.menuButton}>
-            <Icon>menu</Icon>
-          </IconButton>
+          <MainMenu menuIcon="menu" />
           <Typography
             variant="h6"
             color="textPrimary"
