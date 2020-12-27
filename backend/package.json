@@ -6,6 +6,7 @@
   "author": "Vinicius Jadiscke <vjtasso@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "mongoose": "^5.11.4",
@@ -17,6 +18,7 @@
     "@babel/node": "^7.12.6",
     "@babel/preset-env": "^7.12.7",
     "@babel/preset-typescript": "^7.12.7",
+    "@types/cors": "^2.8.9",
     "@types/express": "^4.17.9",
     "@types/jest": "^26.0.16",
     "@types/mongoose": "^5.10.3",

@@ -9,15 +9,19 @@ This project is using Node.js with Express.js, MongoDB and Typescript for the ba
 
 This project is using React.js, React-Dom and Typescript for the client as a personal choice.
 
+For fastening the Ui development it was decided to use [Material-Ui](https://material-ui.com/) as it is a complet library for Ui development.
+
 I decided to use **Docker** and **Docker-Compose** to containerize the development project
 
 Github Projects is used for the planning of the project with a Kanban approach.
 
-It is necessary so install the node_modules on each part of the project before using the container for development so the VSCode uses its full integration with Typescript.
+It is necessary to install the node_modules on each part of the project before using the container for development so the VSCode uses its full integration with Typescript.
 
-So a script was made to make the setup easier.
+A script was made to make the setup easier.
 
 A template repository was made with this decisions so it was easier to replicate it in the future.
+
+At the moment there is no decisions made for deploying the project.
 
 ## Requirements to Run
 
@@ -29,11 +33,15 @@ A template repository was made with this decisions so it was easier to replicate
 
 Use `./startdevelopent.sh` to run the project on the local server
 
-After that you cant use **docker-compose** whenever you want:
-
-`$ docker-compose up --build`
-
 If you want to close to close the container use `Ctrl + C`
+
+### Dependencies
+
+If you want to add o remove any dependencia follow these steps:
+
+- `$ docker-compose down` in `./`
+- Install dependencies inside `./client` or `./backend`
+- Use `./startdevelopent.sh` to start developing again
 
 ## Building The Projects
 
