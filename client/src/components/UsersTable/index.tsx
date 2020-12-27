@@ -83,6 +83,7 @@ const CardWithEdit = ({ row }: { row: Customer }) => {
           tags={row.tags}
           formType="update-form"
           id={row._id}
+          key={row._id}
         />
       </Modal>
     </>

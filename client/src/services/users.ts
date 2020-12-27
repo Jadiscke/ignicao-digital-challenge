@@ -37,4 +37,16 @@ const updateUser = async ({ name, email, tags, id }: User) => {
   }
 };
 
-export { getUsers, createUser, updateUser };
+const deleteUser = async (id: string) => {
+  try {
+    const response = await axios.delete(
+      `${process.env.REACT_APP_API_URL}/users/${id}`
+    );
+    return response.data;
+  } catch (error) {
+    const response = error;
+    return response;
+  }
+};
+
+export { getUsers, createUser, updateUser, deleteUser };

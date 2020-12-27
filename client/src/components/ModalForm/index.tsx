@@ -1,6 +1,8 @@
 import React, {
   ChangeEvent,
   FormEvent,
+  MouseEvent,
+  SyntheticEvent,
   useContext,
   useEffect,
   useState,
@@ -13,11 +15,17 @@ import {
   FormControlLabel,
   Button,
   Grid,
+  IconButton,
+  Icon,
+  Modal,
 } from "@material-ui/core";
 import { createUser, updateUser } from "../../services/users";
 import CustomerContext from "../../context/Customer";
 import ModalContext from "../../context/Modal";
-import { isPropertyAccessExpression } from "typescript";
+import { red } from "@material-ui/core/colors";
+
+import { deleteUser } from "../../services/users";
+
 const tagsValues = [
   { tag_id: "E01", value: "destaque", checked: true },
   { tag_id: "E02", value: "aluno", checked: false },
@@ -51,6 +59,44 @@ const useStyles = makeStyles((theme) => ({
     left: "50%",
     transform: "translate(-50%,-50%)",
   },
+  deleteButton: {
+    position: "absolute",
+    top: "1em",
+    right: "1em",
+    height: "1em",
+    width: "1em",
+    backgroundColor: red[700],
+    color: "#fff",
+    fontSize: "0.5em",
+  },
+  deleteIcon: {
+    fontSize: "2em",
+  },
+  deleteModal: {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%,-50%)",
+    width: "90%",
+    height: "90%",
+    maxWidth: 400,
+    maxHeight: 300,
+    backgroundColor: "#fff",
+    boxShadow: "0 0.3em 1em 0",
+    boxSizing: "border-box",
+    padding: "1em",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  choiceButtonWrapper: {
+    width: "90%",
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
+  },
 }));
 
 const formActions = new Map([
@@ -66,11 +112,15 @@ interface ModalFormProps {
   id?: string;
   formType: string;
 }
-const ModalForm = ({ formType = "create-form", ...props }: ModalFormProps) => {
+const ModalForm: React.FC<ModalFormProps> = ({
+  formType = "create-form",
+  ...props
+}) => {
   const classes = useStyles();
   const [name, setName] = useState<string>(props.name ? props.name : "");
   const [email, setEmail] = useState<string>(props.email ? props.email : "");
   const [checkedTags, setCheckedTags] = useState(tagsValues);
+  const [deleteModal, setDeleteModal] = useState<boolean>(false);
   const { load } = useContext(CustomerContext);
   const { closeModal } = useContext(ModalContext);
 
@@ -132,6 +182,23 @@ const ModalForm = ({ formType = "create-form", ...props }: ModalFormProps) => {
       console.log(error);
     }
   };
+
+  const handleCloseDeleteModal = () => {
+    setDeleteModal(false);
+  };
+
+  const handleClickDeleteModal = () => {
+    setDeleteModal(true);
+  };
+
+  const handleDeleteUser = async () => {
+    setDeleteModal(false);
+    closeModal();
+    if (props.id) {
+      await deleteUser(props.id);
+    }
+    await load();
+  };
   return (
     <form className={classes.modalForm} onSubmit={handleSubmit}>
       <Typography variant="h5" align="center">
@@ -188,6 +255,36 @@ const ModalForm = ({ formType = "create-form", ...props }: ModalFormProps) => {
       >
         Confirmar
       </Button>
+      {formType === "update-form" && (
+        <IconButton
+          type="button"
+          className={classes.deleteButton}
+          onClick={handleClickDeleteModal}
+        >
+          <Icon className={classes.deleteIcon}>delete</Icon>
+        </IconButton>
+      )}
+      <Modal open={deleteModal} onClose={handleCloseDeleteModal}>
+        <div className={classes.deleteModal}>
+          <Typography
+            component="p"
+            align="center"
+          >{`Certeza que deseja deletar o cliente:`}</Typography>
+          <Typography
+            align="center"
+            variant="button"
+            component="p"
+          >{`${props.name}`}</Typography>
+          <div className={classes.choiceButtonWrapper}>
+            <Button style={{ color: red[700] }} onClick={handleDeleteUser}>
+              Sim
+            </Button>
+            <Button color="primary" onClick={handleCloseDeleteModal}>
+              Não
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </form>
   );
 };
