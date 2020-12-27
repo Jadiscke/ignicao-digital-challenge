@@ -52,14 +52,12 @@ const useStyles = makeStyles((theme) => ({
     transform: "translate(-50%,-50%)",
   },
 }));
-type formActionsType = {
-  "create-form": (value: any) => Promise<any>;
-  "update-form": (value: any) => Promise<any>;
-};
-const formActions: formActionsType = {
-  "create-form": createUser,
-  "update-form": updateUser,
-};
+
+const formActions = new Map([
+  ["create-form", createUser],
+  ["update-form", updateUser],
+]);
+
 interface ModalFormProps {
   title: string;
   name?: string;
@@ -68,13 +66,15 @@ interface ModalFormProps {
   id?: string;
   formType: string;
 }
-const ModalForm = (props: ModalFormProps) => {
+const ModalForm = ({ formType = "create-form", ...props }: ModalFormProps) => {
   const classes = useStyles();
   const [name, setName] = useState<string>(props.name ? props.name : "");
   const [email, setEmail] = useState<string>(props.email ? props.email : "");
   const [checkedTags, setCheckedTags] = useState(tagsValues);
   const { load } = useContext(CustomerContext);
   const { closeModal } = useContext(ModalContext);
+
+  const formAction = formActions.get(formType);
   useEffect(() => {
     if (props.tags) {
       const newCheckedTags = checkedTags.map((checkedTag) => {
@@ -118,14 +118,15 @@ const ModalForm = (props: ModalFormProps) => {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(event);
     const tags = checkedTags
       .filter((tag) => tag.checked)
       .map((tag) => tag.value);
     try {
       let dataToSend = { name, email, tags };
-      await formActions[props.formType]({ ...dataToSend, id: props?.id });
-      await load();
+      if (formAction) {
+        await formAction({ ...dataToSend, id: props?.id });
+        await load();
+      }
       closeModal();
     } catch (error) {
       console.log(error);
