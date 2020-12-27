@@ -43,13 +43,8 @@ const MainMenu = ({ menuIcon }: Props) => {
         open={Boolean(anchorEl)}
         onClose={handleCloseMenu}
       >
-        <MenuItem onClick={handleCloseMenu}>
-          <Typography
-            color="textSecondary"
-            variant="button"
-            component="span"
-            onClick={handleModalClick}
-          >
+        <MenuItem onClick={handleModalClick}>
+          <Typography color="textSecondary" variant="button" component="span">
             Novo Cadastro
           </Typography>
         </MenuItem>
@@ -61,7 +56,7 @@ const MainMenu = ({ menuIcon }: Props) => {
         aria-labelledby="Register Modal"
         aria-describedby="simple-modal-description"
       >
-        <ModalForm />
+        <ModalForm title="Novo Usuário" formType="create-form" />
       </Modal>
     </div>
   );

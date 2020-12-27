@@ -4,6 +4,7 @@ interface User {
   name: string;
   email: string;
   tags: Array<string>;
+  id?: string;
 }
 const getUsers = async () => {
   const response = await axios.get(`${process.env.REACT_APP_API_URL}/users`);
@@ -23,4 +24,17 @@ const createUser = async ({ name, email, tags }: User) => {
   }
 };
 
-export { getUsers, createUser };
+const updateUser = async ({ name, email, tags, id }: User) => {
+  try {
+    const response = await axios.put(
+      `${process.env.REACT_APP_API_URL}/users/${id}`,
+      { name, email, tags }
+    );
+    return response.data;
+  } catch (error) {
+    const response = error;
+    return response;
+  }
+};
+
+export { getUsers, createUser, updateUser };

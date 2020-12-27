@@ -1,4 +1,10 @@
-import React, { ChangeEvent, FormEvent, useContext, useState } from "react";
+import React, {
+  ChangeEvent,
+  FormEvent,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import {
   Typography,
   makeStyles,
@@ -6,20 +12,27 @@ import {
   Checkbox,
   FormControlLabel,
   Button,
+  Grid,
 } from "@material-ui/core";
-import { createUser } from "../../services/users";
+import { createUser, updateUser } from "../../services/users";
 import CustomerContext from "../../context/Customer";
 import ModalContext from "../../context/Modal";
+import { isPropertyAccessExpression } from "typescript";
 const tagsValues = [
   { tag_id: "E01", value: "destaque", checked: true },
   { tag_id: "E02", value: "aluno", checked: false },
   { tag_id: "E03", value: "empreendedor", checked: false },
+  { tag_id: "E04", value: "gestão", checked: false },
+  { tag_id: "E05", value: "marketing", checked: false },
+  { tag_id: "E06", value: "arquitetura", checked: false },
+  { tag_id: "E07", value: "startup", checked: false },
+  { tag_id: "E08", value: "evento janeiro", checked: false },
 ];
 const useStyles = makeStyles((theme) => ({
   modalForm: {
     display: "flex",
     flexDirection: "column",
-    gap: "1em",
+    gap: "0.6em",
     position: "absolute",
     top: "50%",
     left: "50%",
@@ -32,15 +45,56 @@ const useStyles = makeStyles((theme) => ({
     padding: "1em",
     boxSizing: "border-box",
   },
+  modalButton: {
+    position: "absolute",
+    bottom: "1em",
+    left: "50%",
+    transform: "translate(-50%,-50%)",
+  },
 }));
-
-const ModalForm = () => {
+type formActionsType = {
+  "create-form": (value: any) => Promise<any>;
+  "update-form": (value: any) => Promise<any>;
+};
+const formActions: formActionsType = {
+  "create-form": createUser,
+  "update-form": updateUser,
+};
+interface ModalFormProps {
+  title: string;
+  name?: string;
+  email?: string;
+  tags?: Array<string>;
+  id?: string;
+  formType: string;
+}
+const ModalForm = (props: ModalFormProps) => {
   const classes = useStyles();
-  const [name, setName] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
+  const [name, setName] = useState<string>(props.name ? props.name : "");
+  const [email, setEmail] = useState<string>(props.email ? props.email : "");
   const [checkedTags, setCheckedTags] = useState(tagsValues);
   const { load } = useContext(CustomerContext);
   const { closeModal } = useContext(ModalContext);
+  useEffect(() => {
+    if (props.tags) {
+      const newCheckedTags = checkedTags.map((checkedTag) => {
+        const foundTag = props.tags?.find((tag) => {
+          return tag === checkedTag.value;
+        });
+        if (foundTag) {
+          return {
+            ...checkedTag,
+            checked: true,
+          };
+        }
+        return {
+          ...checkedTag,
+          checked: false,
+        };
+      });
+      setCheckedTags(newCheckedTags);
+    }
+  }, []);
 
   const onChangeNameHandle = (event: ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
@@ -69,7 +123,8 @@ const ModalForm = () => {
       .filter((tag) => tag.checked)
       .map((tag) => tag.value);
     try {
-      await createUser({ name, email, tags });
+      let dataToSend = { name, email, tags };
+      await formActions[props.formType]({ ...dataToSend, id: props?.id });
       await load();
       closeModal();
     } catch (error) {
@@ -79,7 +134,7 @@ const ModalForm = () => {
   return (
     <form className={classes.modalForm} onSubmit={handleSubmit}>
       <Typography variant="h5" align="center">
-        Novo Usuario
+        {props.title}
       </Typography>
       <TextField
         id="name"
@@ -101,23 +156,35 @@ const ModalForm = () => {
         value={email}
         onChange={onChangeEmailHandle}
       />
-      {checkedTags.map((tag) => (
-        <FormControlLabel
-          key={tag.tag_id}
-          label={tag.value}
-          control={
-            <Checkbox
-              key={tag.tag_id}
-              value={tag.value}
-              checked={tag.checked}
-              name={tag.tag_id}
-              color="primary"
-              onChange={onChangeCheckHandle}
-            />
-          }
-        />
-      ))}
-      <Button type="submit" variant="contained" color="primary">
+      <div>
+        <Grid container spacing={1} direction="row">
+          {checkedTags.map((tag) => (
+            <Grid item xs={6}>
+              <FormControlLabel
+                key={tag.tag_id}
+                label={tag.value}
+                control={
+                  <Checkbox
+                    key={tag.tag_id}
+                    value={tag.value}
+                    checked={tag.checked}
+                    name={tag.tag_id}
+                    color="primary"
+                    onChange={onChangeCheckHandle}
+                  />
+                }
+              />
+            </Grid>
+          ))}
+        </Grid>
+      </div>
+
+      <Button
+        type="submit"
+        variant="contained"
+        color="primary"
+        className={classes.modalButton}
+      >
         Confirmar
       </Button>
     </form>

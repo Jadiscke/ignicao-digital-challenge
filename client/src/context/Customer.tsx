@@ -1,11 +1,11 @@
 import React, { createContext, useState } from "react";
 import { getUsers } from "../services/users";
-interface Customer {
+type Customer = {
   _id: string;
   name: string;
   email: string;
   tags: Array<string>;
-}
+};
 
 type CustomerContextData = {
   customers: Array<Customer>;
@@ -30,5 +30,5 @@ export const CustomerProvider: React.FC = ({ children }) => {
     </CustomerContext.Provider>
   );
 };
-
+export type { Customer };
 export default CustomerContext;
