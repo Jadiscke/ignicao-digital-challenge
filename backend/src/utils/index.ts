@@ -10,9 +10,7 @@ const seed = async (user: users): Promise<void> => {
     if (!savedUser) {
       await userDocument.save();
     }
-  } catch (error) {
-    console.log(error);
-  }
+  } catch (error) {}
 };
 
 const init = async (): Promise<void> => {
@@ -34,9 +32,7 @@ const init = async (): Promise<void> => {
     for (const user of baseUsers) {
       await seed(user);
     }
-  } catch (error) {
-    console.log(error);
-  }
+  } catch (error) {}
 };
 
 export { seed, init };

@@ -96,7 +96,7 @@ const UsersTable = () => {
 
   useEffect(() => {
     load();
-  }, [load]);
+  }, []);
   return (
     <Grid
       container

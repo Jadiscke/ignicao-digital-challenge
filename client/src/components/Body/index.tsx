@@ -75,9 +75,7 @@ const Body = ({ children, title }: BodyProps) => {
     event.preventDefault();
     try {
       await load();
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
   return (
     <Container maxWidth="xl" className={classes.wrapper}>
