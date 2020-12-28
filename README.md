@@ -7,7 +7,7 @@ The objective of the project is to make a simple API and a Simple Client to cons
 
 This project is using Node.js with Express.js, MongoDB and Typescript for the backend as it makes the development fast and easy. (Even better if you are us VScode).
 
-This project is using React.js, React-Dom and Typescript for the client as a personal choice.
+This project is using React.js and Typescript for the client as a personal choice.
 
 For fastening the Ui development it was decided to use [Material-Ui](https://material-ui.com/) as it is a complet library for Ui development.
 
@@ -21,18 +21,20 @@ A script was made to make the setup easier.
 
 A template repository was made with this decisions so it was easier to replicate it in the future.
 
-At the moment there is no decisions made for deploying the project.
+At the moment there is no decisions made for deploying or testing the project.
 
 ## Requirements to Run
 
-- NPM or YARN
+- **NPM** or **YARN**
 - Docker
 - Docker-Composer
+- Bash or Shell
 
-## How to run development
+## How to run the project for development
 
-Use `./startdevelopent.sh` to run the project on the local server
+Use `./startdevelopent.sh` to run the project on the local server if you are using **YARN**
 
+Use `./startdevelopmentNPM.sh` instead if you are using **NPM**
 If you want to close to close the container use `Ctrl + C`
 
 ### Dependencies
@@ -41,11 +43,15 @@ If you want to add o remove any dependencia follow these steps:
 
 - `$ docker-compose down` in `./`
 - Install dependencies inside `./client` or `./backend`
-- Use `./startdevelopent.sh` to start developing again
+- Use `./startdevelopment.sh` to start developing again
 
 ## Building The Projects
 
+There are no scripts for building the project at the moment due to lack of time.
+
 ## Testing The Projects
+
+There are no Tests for backend or the client in due to lack of time.
 
 ## Cleaning containers
 
@@ -57,3 +63,4 @@ Use the command `sudo docker system prune` to clean all images, networks and con
 - Connect to `localhost:3000` to access the frontend
 - Swagger on `localhost:8000/swagger`
 - There is no need to create a .env file
+- All the environments variables are present on the `docker-compose.yml` archive

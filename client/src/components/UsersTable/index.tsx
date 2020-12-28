@@ -15,7 +15,6 @@ import Tag from "../Tag";
 import CustomerContext from "../../context/Customer";
 import ModalContext, { ModalProvider } from "../../context/Modal";
 import type { Customer } from "../../context/Customer";
-import { relative } from "path";
 import ModalForm from "../ModalForm";
 
 const useStyles = makeStyles((theme) => ({
@@ -97,7 +96,7 @@ const UsersTable = () => {
 
   useEffect(() => {
     load();
-  }, []);
+  }, [load]);
   return (
     <Grid
       container

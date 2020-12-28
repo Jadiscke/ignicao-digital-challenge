@@ -1,8 +1,7 @@
 import React, {
   ChangeEvent,
   FormEvent,
-  MouseEvent,
-  SyntheticEvent,
+  Ref,
   useContext,
   useEffect,
   useState,
@@ -112,181 +111,180 @@ interface ModalFormProps {
   id?: string;
   formType: string;
 }
-const ModalForm: React.FC<ModalFormProps> = ({
-  formType = "create-form",
-  ...props
-}) => {
-  const classes = useStyles();
-  const [name, setName] = useState<string>(props.name ? props.name : "");
-  const [email, setEmail] = useState<string>(props.email ? props.email : "");
-  const [checkedTags, setCheckedTags] = useState(tagsValues);
-  const [deleteModal, setDeleteModal] = useState<boolean>(false);
-  const { load } = useContext(CustomerContext);
-  const { closeModal } = useContext(ModalContext);
+const ModalForm: React.ForwardRefExoticComponent<ModalFormProps> = React.forwardRef(
+  ({ formType = "create-form", ...props }, ref) => {
+    const classes = useStyles();
+    const [name, setName] = useState<string>(props.name ? props.name : "");
+    const [email, setEmail] = useState<string>(props.email ? props.email : "");
+    const [checkedTags, setCheckedTags] = useState(tagsValues);
+    const [deleteModal, setDeleteModal] = useState<boolean>(false);
+    const { load } = useContext(CustomerContext);
+    const { closeModal } = useContext(ModalContext);
 
-  const formAction = formActions.get(formType);
-  useEffect(() => {
-    if (props.tags) {
-      const newCheckedTags = checkedTags.map((checkedTag) => {
-        const foundTag = props.tags?.find((tag) => {
-          return tag === checkedTag.value;
-        });
-        if (foundTag) {
+    const formAction = formActions.get(formType);
+    useEffect(() => {
+      if (props.tags) {
+        const newCheckedTags = checkedTags.map((checkedTag) => {
+          const foundTag = props.tags?.find((tag) => {
+            return tag === checkedTag.value;
+          });
+          if (foundTag) {
+            return {
+              ...checkedTag,
+              checked: true,
+            };
+          }
           return {
             ...checkedTag,
-            checked: true,
+            checked: false,
           };
-        }
-        return {
-          ...checkedTag,
-          checked: false,
-        };
-      });
-      setCheckedTags(newCheckedTags);
-    }
-  }, []);
-
-  const onChangeNameHandle = (event: ChangeEvent<HTMLInputElement>) => {
-    setName(event.target.value);
-  };
-  const onChangeEmailHandle = (event: ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value);
-  };
-  const onChangeCheckHandle = (event: ChangeEvent<HTMLInputElement>) => {
-    const indexToChange = checkedTags.findIndex((tag) => {
-      return tag.tag_id == event.target.name;
-    });
-    const newCheckedTag = {
-      tag_id: event.target.name,
-      value: event.target.value,
-      checked: event.target.checked,
-    };
-    let newCheckedTags = [...checkedTags];
-    newCheckedTags[indexToChange] = newCheckedTag;
-    setCheckedTags(newCheckedTags);
-  };
-
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const tags = checkedTags
-      .filter((tag) => tag.checked)
-      .map((tag) => tag.value);
-    try {
-      let dataToSend = { name, email, tags };
-      if (formAction) {
-        await formAction({ ...dataToSend, id: props?.id });
-        await load();
+        });
+        setCheckedTags(newCheckedTags);
       }
+    }, []);
+
+    const onChangeNameHandle = (event: ChangeEvent<HTMLInputElement>) => {
+      setName(event.target.value);
+    };
+    const onChangeEmailHandle = (event: ChangeEvent<HTMLInputElement>) => {
+      setEmail(event.target.value);
+    };
+    const onChangeCheckHandle = (event: ChangeEvent<HTMLInputElement>) => {
+      const indexToChange = checkedTags.findIndex((tag) => {
+        return tag.tag_id === event.target.name;
+      });
+      const newCheckedTag = {
+        tag_id: event.target.name,
+        value: event.target.value,
+        checked: event.target.checked,
+      };
+      let newCheckedTags = [...checkedTags];
+      newCheckedTags[indexToChange] = newCheckedTag;
+      setCheckedTags(newCheckedTags);
+    };
+
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      const tags = checkedTags
+        .filter((tag) => tag.checked)
+        .map((tag) => tag.value);
+      try {
+        let dataToSend = { name, email, tags };
+        if (formAction) {
+          await formAction({ ...dataToSend, id: props?.id });
+          await load();
+        }
+        closeModal();
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    const handleCloseDeleteModal = () => {
+      setDeleteModal(false);
+    };
+
+    const handleClickDeleteModal = () => {
+      setDeleteModal(true);
+    };
+
+    const handleDeleteUser = async () => {
+      setDeleteModal(false);
       closeModal();
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleCloseDeleteModal = () => {
-    setDeleteModal(false);
-  };
-
-  const handleClickDeleteModal = () => {
-    setDeleteModal(true);
-  };
-
-  const handleDeleteUser = async () => {
-    setDeleteModal(false);
-    closeModal();
-    if (props.id) {
-      await deleteUser(props.id);
-    }
-    await load();
-  };
-  return (
-    <form className={classes.modalForm} onSubmit={handleSubmit}>
-      <Typography variant="h5" align="center">
-        {props.title}
-      </Typography>
-      <TextField
-        id="name"
-        type="text"
-        variant="outlined"
-        required
-        label="Nome"
-        helperText="Insira o nome completo"
-        value={name}
-        onChange={onChangeNameHandle}
-      />
-      <TextField
-        id="email"
-        type="email"
-        variant="outlined"
-        required
-        label="Email"
-        helperText="Exemplo: example@email.com"
-        value={email}
-        onChange={onChangeEmailHandle}
-      />
-      <div>
-        <Grid container spacing={1} direction="row">
-          {checkedTags.map((tag) => (
-            <Grid item xs={6}>
-              <FormControlLabel
-                key={tag.tag_id}
-                label={tag.value}
-                control={
-                  <Checkbox
-                    key={tag.tag_id}
-                    value={tag.value}
-                    checked={tag.checked}
-                    name={tag.tag_id}
-                    color="primary"
-                    onChange={onChangeCheckHandle}
-                  />
-                }
-              />
-            </Grid>
-          ))}
-        </Grid>
-      </div>
-
-      <Button
-        type="submit"
-        variant="contained"
-        color="primary"
-        className={classes.modalButton}
-      >
-        Confirmar
-      </Button>
-      {formType === "update-form" && (
-        <IconButton
-          type="button"
-          className={classes.deleteButton}
-          onClick={handleClickDeleteModal}
-        >
-          <Icon className={classes.deleteIcon}>delete</Icon>
-        </IconButton>
-      )}
-      <Modal open={deleteModal} onClose={handleCloseDeleteModal}>
-        <div className={classes.deleteModal}>
-          <Typography
-            component="p"
-            align="center"
-          >{`Certeza que deseja deletar o cliente:`}</Typography>
-          <Typography
-            align="center"
-            variant="button"
-            component="p"
-          >{`${props.name}`}</Typography>
-          <div className={classes.choiceButtonWrapper}>
-            <Button style={{ color: red[700] }} onClick={handleDeleteUser}>
-              Sim
-            </Button>
-            <Button color="primary" onClick={handleCloseDeleteModal}>
-              Não
-            </Button>
-          </div>
+      if (props.id) {
+        await deleteUser(props.id);
+      }
+      await load();
+    };
+    return (
+      <form className={classes.modalForm} onSubmit={handleSubmit}>
+        <Typography variant="h5" align="center">
+          {props.title}
+        </Typography>
+        <TextField
+          id="name"
+          type="text"
+          variant="outlined"
+          required
+          label="Nome"
+          helperText="Insira o nome completo"
+          value={name}
+          onChange={onChangeNameHandle}
+        />
+        <TextField
+          id="email"
+          type="email"
+          variant="outlined"
+          required
+          label="Email"
+          helperText="Exemplo: example@email.com"
+          value={email}
+          onChange={onChangeEmailHandle}
+        />
+        <div>
+          <Grid container spacing={1} direction="row">
+            {checkedTags.map((tag) => (
+              <Grid item xs={6}>
+                <FormControlLabel
+                  key={tag.tag_id}
+                  label={tag.value}
+                  control={
+                    <Checkbox
+                      key={tag.tag_id}
+                      value={tag.value}
+                      checked={tag.checked}
+                      name={tag.tag_id}
+                      color="primary"
+                      onChange={onChangeCheckHandle}
+                    />
+                  }
+                />
+              </Grid>
+            ))}
+          </Grid>
         </div>
-      </Modal>
-    </form>
-  );
-};
+
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          className={classes.modalButton}
+        >
+          Confirmar
+        </Button>
+        {formType === "update-form" && (
+          <IconButton
+            type="button"
+            className={classes.deleteButton}
+            onClick={handleClickDeleteModal}
+          >
+            <Icon className={classes.deleteIcon}>delete</Icon>
+          </IconButton>
+        )}
+        <Modal open={deleteModal} onClose={handleCloseDeleteModal}>
+          <div className={classes.deleteModal}>
+            <Typography
+              component="p"
+              align="center"
+            >{`Certeza que deseja deletar o cliente:`}</Typography>
+            <Typography
+              align="center"
+              variant="button"
+              component="p"
+            >{`${props.name}`}</Typography>
+            <div className={classes.choiceButtonWrapper}>
+              <Button style={{ color: red[700] }} onClick={handleDeleteUser}>
+                Sim
+              </Button>
+              <Button color="primary" onClick={handleCloseDeleteModal}>
+                Não
+              </Button>
+            </div>
+          </div>
+        </Modal>
+      </form>
+    );
+  }
+);
 
 export default ModalForm;

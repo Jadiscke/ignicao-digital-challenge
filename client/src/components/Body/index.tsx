@@ -1,6 +1,14 @@
-import { Container, makeStyles, Typography } from "@material-ui/core";
+import {
+  Container,
+  Icon,
+  IconButton,
+  makeStyles,
+  TextField,
+  Typography,
+} from "@material-ui/core";
 import { orange } from "@material-ui/core/colors";
-import React, { ReactNode } from "react";
+import React, { ChangeEvent, FormEvent, ReactNode, useContext } from "react";
+import CustomerContext from "../../context/Customer";
 
 interface BodyProps {
   title: string;
@@ -18,10 +26,59 @@ const useStyles = makeStyles((theme) => ({
   bodyTitle: {
     margin: "1em auto",
   },
+  filterWrapper: {
+    margin: "1em auto",
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+  },
+  filterForm: {
+    margin: "1em auto",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "90%",
+    maxWidth: 400,
+  },
+  filter: {
+    width: "100%",
+  },
 }));
 
 const Body = ({ children, title }: BodyProps) => {
+  const { filters, setFilters, load } = useContext(CustomerContext);
   const classes = useStyles();
+  const mapFilterLabels = new Map([
+    ["name", "Nome"],
+    ["tag", "Tag"],
+    ["email", "Email"],
+  ]);
+
+  const handleChangeFilterType = (event: ChangeEvent<HTMLInputElement>) => {
+    setFilters({
+      ...filters,
+      filter: event.target.value,
+    });
+  };
+
+  const handleChangeFilterValue = (event: ChangeEvent<HTMLInputElement>) => {
+    setFilters({
+      ...filters,
+      value: event.target.value,
+    });
+  };
+
+  const handleSubmit = async (event: FormEvent) => {
+    event.preventDefault();
+    try {
+      await load();
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <Container maxWidth="xl" className={classes.wrapper}>
       <Typography
@@ -33,6 +90,32 @@ const Body = ({ children, title }: BodyProps) => {
       >
         {title}
       </Typography>
+      <form onSubmit={handleSubmit} className={classes.filterForm}>
+        <TextField
+          select
+          defaultValue="name"
+          color="secondary"
+          className={classes.filter}
+          value={filters.filter}
+          onChange={handleChangeFilterType}
+        >
+          <option value="name">Nome</option>
+          <option value="tag">Tag</option>
+          <option value="email">Email</option>
+        </TextField>
+        <div className={classes.filterWrapper}>
+          <TextField
+            color="secondary"
+            label={mapFilterLabels.get(filters.filter)}
+            className={classes.filter}
+            onChange={handleChangeFilterValue}
+          />
+          <IconButton type="submit">
+            <Icon fontSize="small">search</Icon>
+          </IconButton>
+        </div>
+      </form>
+
       {children}
     </Container>
   );

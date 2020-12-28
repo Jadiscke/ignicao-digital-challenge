@@ -46,13 +46,28 @@ class UserController {
         delete request.query.tag;
       }
       if (request.query?.tags) {
-        if (Number(request.query?.tags?.length) > 1) {
+        const tags = Array(request.query.tags);
+        if (Number(tags.length) > 1) {
           const tags: any = request.query.tags || [""];
+          console.log(tags);
           const users = await User.find().where("tags").all(tags);
           return response.status(200).json(users);
         }
       }
-      const users = await User.find().where(request.query);
+      const newQueryMap = new Map();
+      for (const query in request.query) {
+        const stringQuery = request.query[query]?.toString();
+        if (stringQuery) {
+          newQueryMap.set(query, new RegExp(stringQuery));
+        }
+      }
+      const newQueryObject = [...newQueryMap.entries()].reduce(
+        (main, [key, value]) => ({ ...main, [String(key)]: value }),
+        {}
+      );
+
+      console.log(newQueryObject);
+      const users = await User.find().where(newQueryObject);
       return response.status(200).json(users);
     } catch (error) {
       return response.status(400).json({

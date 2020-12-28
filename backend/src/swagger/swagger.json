@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "title": "vuttr backend",
+    "title": "ignicao digital challenge",
     "version": "1.0"
   },
   "servers": [{ "url": "https://localhost:8000/" }],
@@ -52,10 +52,7 @@
                 "title": {
                   "type": "string"
                 },
-                "link": {
-                  "type": "string"
-                },
-                "description": {
+                "email": {
                   "type": "string"
                 },
                 "tags": {
@@ -65,9 +62,11 @@
                   }
                 }
               }
-            }
+            },
+            "required": true
           }
         ],
+        "tags": ["Users"],
         "responses": {
           "204": {
             "description": "No Content"
@@ -88,7 +87,24 @@
     "/users/": {
       "get": {
         "description": "",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "required": false
+          },
+          {
+            "name": "tag",
+            "in": "query",
+            "required": false
+          },
+          {
+            "name": "email",
+            "in": "query",
+            "required": false
+          }
+        ],
+        "tags": ["Users"],
         "responses": {
           "200": {
             "description": "OK"
@@ -110,10 +126,7 @@
                 "title": {
                   "type": "string"
                 },
-                "link": {
-                  "type": "string"
-                },
-                "description": {
+                "email": {
                   "type": "string"
                 },
                 "tags": {
@@ -127,6 +140,7 @@
             }
           }
         ],
+        "tags": ["Users"],
         "responses": {
           "201": {
             "description": "Created"
