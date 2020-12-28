@@ -1,4 +1,3 @@
-import { loadavg } from "os";
 import React, { createContext, useState } from "react";
 import { getUsers, getFilterUsers } from "../services/users";
 type Customer = {
