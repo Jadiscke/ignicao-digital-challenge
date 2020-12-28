@@ -11,6 +11,20 @@ const getUsers = async () => {
   return response.data;
 };
 
+const getFilterUsers = async ({
+  filter,
+  value,
+}: {
+  filter: string;
+  value: string;
+}) => {
+  const response = await axios.get(
+    `${process.env.REACT_APP_API_URL}/users?${filter}=${value}`
+  );
+
+  return response.data;
+};
+
 const createUser = async ({ name, email, tags }: User) => {
   try {
     const response = await axios.post(
@@ -49,4 +63,4 @@ const deleteUser = async (id: string) => {
   }
 };
 
-export { getUsers, createUser, updateUser, deleteUser };
+export { getUsers, createUser, updateUser, deleteUser, getFilterUsers };
