@@ -23,6 +23,8 @@ A template repository was made with this decisions so it was easier to replicate
 
 At the moment there is no decisions made for deploying or testing the project.
 
+The tags used for Users/Customers are hard coded due to lack of time
+
 ## Requirements to Run
 
 - **NPM** or **YARN**
