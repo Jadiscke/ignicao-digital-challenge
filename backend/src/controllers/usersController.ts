@@ -27,7 +27,6 @@ class UserController {
 
   async delete(request: Request, response: Response): Promise<Response<any>> {
     const { id } = request.params;
-    console.log(request.params);
     try {
       await User.deleteOne({ _id: id });
       return response.status(204).send();
@@ -49,7 +48,6 @@ class UserController {
         const tags = Array(request.query.tags);
         if (Number(tags.length) > 1) {
           const tags: any = request.query.tags || [""];
-          console.log(tags);
           const users = await User.find().where("tags").all(tags);
           return response.status(200).json(users);
         }
@@ -65,8 +63,6 @@ class UserController {
         (main, [key, value]) => ({ ...main, [String(key)]: value }),
         {}
       );
-
-      console.log(newQueryObject);
       const users = await User.find().where(newQueryObject);
       return response.status(200).json(users);
     } catch (error) {
@@ -84,10 +80,8 @@ class UserController {
 
     try {
       await User.updateOne({ _id: id }, { ...body });
-      console.log("Working!");
       return response.status(204).send();
     } catch (err) {
-      console.log(err);
       return response.status(400).json({ err });
     }
   }

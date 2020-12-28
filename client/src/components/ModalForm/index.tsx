@@ -175,9 +175,7 @@ const ModalForm: React.ForwardRefExoticComponent<ModalFormProps> = React.forward
           await load();
         }
         closeModal();
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
     };
 
     const handleCloseDeleteModal = () => {
